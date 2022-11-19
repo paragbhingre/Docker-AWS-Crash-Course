@@ -1,15 +1,28 @@
-const express = require("express");
+var express = require('express');
 
-const app = express();
+let app1 = express();
+let app2 = express();
 
-app.get("/", (req, res) => {
+app1.get("/", (req, res) => {
   res.send("This is my express app");
 });
 
-app.get("/me", (req, res) => {
+app1.get("/me", (req, res) => {
   res.send("Hi I am Laith");
 });
 
-app.listen(5000, () => {
-  console.log("listening");
+app2.get("/", (req, res) => {
+  res.send("This is my express app2");
+});
+
+app2.get("/me", (req, res) => {
+  res.send("Hi I am Laith2");
+});
+
+app1.listen(3000, () => {
+  console.log("Started server on 3000");
+});
+
+app2.listen(3002, () => {
+  console.log("Started server on 3002");   
 });
