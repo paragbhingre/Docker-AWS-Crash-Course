@@ -14,18 +14,13 @@ http:
  # You can specify a custom health check path. The default is "/".
  # healthcheck: '/admin'
   target_port: 3000
-  target_container: main
-  additional_rules:
-    - path: "admin"
-      target_port: 3002
-      healthcheck: '/admin'
 # Configuration for your containers and service.
 image:
-  build: Dockerfile1
+  build: Dockerfile
   # Docker build arguments. For additional overrides: https://aws.github.io/copilot-cli/docs/manifest/lb-web-service/#image-build
  #location: public.ecr.aws/nginx/nginx:perl
   # Port exposed through your container to route traffic to it.
-  port: 8080
+  port: 3002
 
 cpu: 256       # Number of CPU units for the task.
 memory: 512    # Amount of memory in MiB used by the task.
@@ -34,11 +29,6 @@ exec: true     # Enable running commands in your container.
 network:
   connect: true # Enable Service Connect for intra-environment traffic between services.
 
-sidecars:
-  main:
-    image:
-      build: Dockerfile
-    port: 3002
 
 # storage:
   # readonly_fs: true       # Limit to read-only access to mounted root filesystems.
