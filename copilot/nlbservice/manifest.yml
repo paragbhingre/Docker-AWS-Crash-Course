@@ -1,34 +1,43 @@
-# The manifest for the "backend1" service.
-# Read the full specification for the "Backend Service" type at:
-#  https://aws.github.io/copilot-cli/docs/manifest/backend-service/
+# The manifest for the "nlbservice" service.
+# Read the full specification for the "Load Balanced Web Service" type at:
+#  https://aws.github.io/copilot-cli/docs/manifest/lb-web-service/
 
 # Your service name will be used in naming your resources like log groups, ECS services, etc.
-name: backend1
-type: Backend Service
+name: nlbservice
+type: Load Balanced Web Service
 
-# Your service is reachable at "http://backend1.${COPILOT_SERVICE_DISCOVERY_ENDPOINT}:3002" but is not public.
+# Distribute traffic to your service.
+http: false
+  # Requests to this path will be forwarded to your service.
+  # To match all requests you can use the "/" path.
+# path: '/'
+  # You can specify a custom health check path. The default is "/".
+  # healthcheck: '/'
 
+nlb:
+  port: 80/tcp
+  target_port: 3000
+  additional_listeners:
+    - port: 81/tcp
+      target_port: 3002
+# alias: paragspersonaldomain.com
 # Configuration for your containers and service.
 image:
-  # Docker build arguments. For additional overrides: https://aws.github.io/copilot-cli/docs/manifest/backend-service/#image-build
+  # Docker build arguments. For additional overrides: https://aws.github.io/copilot-cli/docs/manifest/lb-web-service/#image-build
   build: Dockerfile
   # Port exposed through your container to route traffic to it.
-  port: 3003
+  port: 3000
 
 cpu: 256       # Number of CPU units for the task.
 memory: 512    # Amount of memory in MiB used by the task.
 count: 1       # Number of tasks that should be running in your service.
 exec: true     # Enable running commands in your container.
-
-
-http:
-  path: 'customer'
-  healthcheck: "/customer"
-  target_port: 3003
 network:
-  vpc:
-    placement: private
+  connect: true # Enable Service Connect for intra-environment traffic between services.
 
+# storage:
+  # readonly_fs: true       # Limit to read-only access to mounted root filesystems.
+ 
 # Optional fields for more advanced use-cases.
 #
 #variables:                    # Pass environment variables as key value pairs.

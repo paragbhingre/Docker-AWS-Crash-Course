@@ -1,0 +1,21 @@
+# The manifest for the "cert" environment.
+# Read the full specification for the "Environment" type at:
+#  https://aws.github.io/copilot-cli/docs/manifest/environment/
+
+# Your environment name will be used in naming your resources like VPC, cluster, etc.
+name: cert
+type: Environment
+
+# Import your own VPC and subnets or configure how they should be created.
+# network:
+#   vpc:
+#     id:
+
+# Configure the load balancers in your environment, once created.
+http:
+  private:
+    certificates: [arn:aws:acm:us-west-2:910995322324:certificate/40ceca96-e0ea-446b-abd5-d75c326cbf13]
+
+# Configure observability for your environment resources.
+observability:
+  container_insights: false

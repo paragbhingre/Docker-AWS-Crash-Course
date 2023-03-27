@@ -1,33 +1,40 @@
-# The manifest for the "backend1" service.
-# Read the full specification for the "Backend Service" type at:
-#  https://aws.github.io/copilot-cli/docs/manifest/backend-service/
+# The manifest for the "worker" service.
+# Read the full specification for the "Worker Service" type at:
+# https://aws.github.io/copilot-cli/docs/manifest/worker-service/
 
 # Your service name will be used in naming your resources like log groups, ECS services, etc.
-name: backend1
-type: Backend Service
-
-# Your service is reachable at "http://backend1.${COPILOT_SERVICE_DISCOVERY_ENDPOINT}:3002" but is not public.
+name: worker
+type: Worker Service
 
 # Configuration for your containers and service.
 image:
-  # Docker build arguments. For additional overrides: https://aws.github.io/copilot-cli/docs/manifest/backend-service/#image-build
+  # Docker build arguments.
   build: Dockerfile
-  # Port exposed through your container to route traffic to it.
-  port: 3003
 
 cpu: 256       # Number of CPU units for the task.
 memory: 512    # Amount of memory in MiB used by the task.
 count: 1       # Number of tasks that should be running in your service.
 exec: true     # Enable running commands in your container.
 
+publish:
+  topics:
+    - name: orderEvents
 
-http:
-  path: 'customer'
-  healthcheck: "/customer"
-  target_port: 3003
-network:
-  vpc:
-    placement: private
+subscribe:
+  topics:
+    - name: orderEvents
+      service: worker
+
+# storage:
+  # readonly_fs: true       # Limit to read-only access to mounted root filesystems.
+
+
+# You can register to topics from other services.
+# The events can be received from an SQS queue via the env var $COPILOT_QUEUE_URI.
+# subscribe:
+#   topics: 
+#     - name: topic-from-another-service
+#       service: another-service
 
 # Optional fields for more advanced use-cases.
 #
